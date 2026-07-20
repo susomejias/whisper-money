@@ -6,6 +6,7 @@ use App\Enums\BankingConnectionStatus;
 use App\Enums\BankingProvider;
 use App\Features\CalculateBalancesOnImport;
 use App\Features\Mcp;
+use App\Features\SavingsGoals;
 use App\Jobs\PurgeResidualEncryptionArtifactsJob;
 use App\Models\BankingConnection;
 use App\Services\CurrencyOptions;
@@ -181,18 +182,21 @@ class HandleInertiaRequests extends Middleware
                 'cashflow' => true,
                 'calculateBalancesOnImport' => false,
                 'mcp' => false,
+                'savingsGoals' => false,
             ];
         }
 
         $features = Feature::for($user)->values([
             CalculateBalancesOnImport::class,
             Mcp::class,
+            SavingsGoals::class,
         ]);
 
         return [
             'cashflow' => true,
             'calculateBalancesOnImport' => $features[CalculateBalancesOnImport::class] !== false,
             'mcp' => $features[Mcp::class] !== false,
+            'savingsGoals' => $features[SavingsGoals::class] !== false,
         ];
     }
 
